@@ -68,7 +68,7 @@ const Game: Component = () => {
       >
         Github
       </a>
-      <div class="w-80 scale-150 relative rounded overflow-hidden">
+      <div class="w-80 md:scale-150 relative rounded overflow-hidden">
         <div class="flex w-full justify-between text-white/50">
           <div>Water Color Sort</div>
           <button onClick={reset}>Reset</button>
