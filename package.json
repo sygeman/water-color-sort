@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@solid-primitives/keyboard": "1.0.1",
-    "nanoid": "^4.0.0",
+    "nanoid": "4.0.0",
     "solid-js": "1.4.8"
   }
 }
