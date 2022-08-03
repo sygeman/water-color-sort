@@ -73,12 +73,12 @@ const Game: Component = () => {
           <div>Water Color Sort</div>
           <button onClick={reset}>Reset</button>
         </div>
-        <div class="w-80 h-80 bg-slate-800 flex flex-wrap justify-center items-center gap-6">
+        <div class="w-80 h-80 bg-slate-800 flex flex-wrap justify-center items-center gap-6 px-14">
           <For each={bottlesArray()}>
             {(bottle) => (
               <button
                 class={`flex flex-col-reverse w-6 h-32 bg-white/20 rounded overflow-hidden transition-transform ${
-                  bottle.id === selected() ? "scale-125" : ""
+                  bottle.id === selected() ? "scale-110" : ""
                 }`}
                 onClick={() => select(bottle.id)}
               >
