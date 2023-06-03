@@ -20,6 +20,28 @@ interface GenerateBottlesOptions {
   emptyCount?: number;
 }
 
+export const generateMockBottles = () => {
+  const bottles: Map<string, Bottle> = new Map();
+
+  const input: LiquideType[][] = [
+    ["pink", "red", "white", "green"],
+    ["white", "green", "yellow", "yellow"],
+    ["orange", "cyan", "red", "yellow"],
+    ["white", "cyan", "yellow", "pink"],
+    ["red", "orange", "orange", "orange"],
+    ["cyan", "white", "pink", "green"],
+    ["pink", "cyan", "green", "red"],
+    [],
+  ];
+
+  input.forEach((liqs) => {
+    const bottle = createBottle(new Set(liqs.reverse().map(createLiquide)));
+    bottles.set(bottle.id, bottle);
+  });
+
+  return bottles;
+};
+
 export const generateBottles = (options?: GenerateBottlesOptions) => {
   const allCount = options?.allCount || shuffle(allCountVariants)[0];
   const emptyCount = options?.emptyCount || shuffle(emptyCountVariants)[0];

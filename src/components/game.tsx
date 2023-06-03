@@ -9,20 +9,20 @@ import { liquids } from "../constants";
 import { bottleIsDone } from "../libs/bottle-is-done";
 import { bottleIsEmpty } from "../libs/bottle-is-empty";
 import { bottlesIsDone } from "../libs/bottles-is-done";
-import { generateBottles } from "../libs/generate-bottles";
+import { generateMockBottles } from "../libs/generate-bottles";
 import { transfuse } from "../libs/transfuse";
 import { Bottle } from "../types/bottle";
 
 const Game: Component = () => {
   const [bottles, setBottles] = createSignal<Map<string, Bottle>>(
-    generateBottles()
+    generateMockBottles()
   );
   const [selected, setSelected] = createSignal<string | null>(null);
 
   const bottlesArray = createMemo(() => [...bottles().values()]);
 
   const reset = () => {
-    setBottles(generateBottles());
+    setBottles(generateMockBottles());
     setSelected(null);
   };
 
@@ -77,7 +77,7 @@ const Game: Component = () => {
           <For each={bottlesArray()}>
             {(bottle) => (
               <button
-                class={`flex flex-col-reverse w-6 h-28 bg-white/20 rounded overflow-hidden transition-transform ${
+                class={`flex flex-col-reverse w-6 h-32 bg-white/20 rounded overflow-hidden transition-transform ${
                   bottle.id === selected() ? "scale-110" : ""
                 }`}
                 onClick={() => select(bottle.id)}
