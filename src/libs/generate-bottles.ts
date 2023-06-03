@@ -8,6 +8,7 @@ import {
 import { Bottle } from "../types/bottle";
 import { Liquide, LiquideType } from "../types/liquide";
 import { shuffle } from "../utils/shuffle";
+import { transfuse } from "./transfuse";
 
 const createBottle = (liquids: Set<Liquide> = new Set()): Bottle => ({
   id: nanoid(),
@@ -20,24 +21,25 @@ interface GenerateBottlesOptions {
   emptyCount?: number;
 }
 
-export const generateMockBottles = () => {
-  const bottles: Map<string, Bottle> = new Map();
+const shuffleNext = (bottles: Map<string, Bottle>) => {
+  const notEmptyBottles = [...bottles.values()].filter(
+    (bottle) => bottle.liquids.size !== 0
+  );
+  const fromBottle = shuffle(notEmptyBottles)?.[0];
 
-  const input: LiquideType[][] = [
-    ["pink", "red", "white", "green"],
-    ["white", "green", "yellow", "yellow"],
-    ["orange", "cyan", "red", "yellow"],
-    ["white", "cyan", "yellow", "pink"],
-    ["red", "orange", "orange", "orange"],
-    ["cyan", "white", "pink", "green"],
-    ["pink", "cyan", "green", "red"],
-    [],
-  ];
+  const notFullBottles = [...bottles.values()].filter(
+    (bottle) =>
+      bottle.liquids.size !== bottleSize && bottle.id !== fromBottle.id
+  );
+  const toBottle = shuffle(notFullBottles)?.[0];
 
-  input.forEach((liqs) => {
-    const bottle = createBottle(new Set(liqs.reverse().map(createLiquide)));
-    bottles.set(bottle.id, bottle);
-  });
+  const transfuseResult = transfuse(fromBottle, toBottle, true);
+
+  if (transfuseResult) {
+    const [bottle1, bottle2] = transfuseResult;
+    bottles.set(bottle1.id, bottle1);
+    bottles.set(bottle2.id, bottle2);
+  }
 
   return bottles;
 };
@@ -45,7 +47,7 @@ export const generateMockBottles = () => {
 export const generateBottles = (options?: GenerateBottlesOptions) => {
   const allCount = options?.allCount || shuffle(allCountVariants)[0];
   const emptyCount = options?.emptyCount || shuffle(emptyCountVariants)[0];
-  const bottles: Map<string, Bottle> = new Map();
+  let bottles: Map<string, Bottle> = new Map();
   const liquidsCount = allCount - emptyCount;
   const liquidsKeys = shuffle(Object.keys(liquids)).slice(0, liquidsCount);
 
@@ -56,6 +58,13 @@ export const generateBottles = (options?: GenerateBottlesOptions) => {
     const bottle = createBottle(new Set(liquids.map(createLiquide)));
     bottles.set(bottle.id, bottle);
   });
+
+  let shuffleCount = 0;
+
+  while (shuffleCount < 20) {
+    bottles = shuffleNext(bottles);
+    shuffleCount++;
+  }
 
   return bottles;
 };

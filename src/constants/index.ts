@@ -1,3 +1,5 @@
+export const githubLink = "https://github.com/sygeman/water-color-sort";
+
 export const bottleSize = 4;
 
 // 3/5, 5/7, 7/9, 5/6, 9/11, 7/8

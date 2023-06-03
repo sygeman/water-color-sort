@@ -5,31 +5,29 @@ import {
   createSignal,
   For,
 } from "solid-js";
-import { liquids } from "../constants";
-import { bottleIsDone } from "../libs/bottle-is-done";
+import { githubLink, liquids } from "../constants";
 import { bottleIsEmpty } from "../libs/bottle-is-empty";
 import { bottlesIsDone } from "../libs/bottles-is-done";
-import { generateMockBottles } from "../libs/generate-bottles";
+import { generateBottles } from "../libs/generate-bottles";
 import { transfuse } from "../libs/transfuse";
 import { Bottle } from "../types/bottle";
 
 const Game: Component = () => {
-  const [bottles, setBottles] = createSignal<Map<string, Bottle>>(
-    generateMockBottles()
-  );
+  const [bottles, setBottles] = createSignal<Map<string, Bottle>>(new Map());
   const [selected, setSelected] = createSignal<string | null>(null);
 
   const bottlesArray = createMemo(() => [...bottles().values()]);
 
-  const reset = () => {
-    setBottles(generateMockBottles());
+  const newGame = () => {
+    const newBottles = generateBottles();
+    setBottles(newBottles);
     setSelected(null);
   };
 
   createEffect(() => {
     const allBottlesIsDone = bottlesIsDone(bottles());
     if (allBottlesIsDone) {
-      // reset();
+      newGame();
     }
   });
 
@@ -64,14 +62,14 @@ const Game: Component = () => {
       <a
         class="absolute right-4 top-2 text-white/50 font-medium"
         target="blank"
-        href="https://github.com/sygeman/water-color-sort"
+        href={githubLink}
       >
         Github
       </a>
       <div class="w-80 md:scale-150 relative rounded overflow-hidden">
         <div class="flex w-full justify-between text-white/50">
           <div>Water Color Sort</div>
-          <button onClick={reset}>Reset</button>
+          <button onClick={newGame}>New Game</button>
         </div>
         <div class="w-80 h-80 bg-slate-800 flex flex-wrap justify-center items-center gap-6 px-4">
           <For each={bottlesArray()}>

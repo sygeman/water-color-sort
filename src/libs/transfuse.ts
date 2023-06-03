@@ -12,6 +12,11 @@ const isSameTopLiqide = (fromBottle?: Bottle, toBottle?: Bottle) => {
   return fromLiquide === toLiquide || !toLiquide;
 };
 
+const getLastLiqude = (bottle: Bottle) => {
+  const liquids = Array.from(bottle.liquids).reverse();
+  return new Set([liquids[0]]);
+};
+
 const getLastLiqudeWithSameType = (bottle: Bottle) => {
   const liquids = Array.from(bottle.liquids).reverse();
   const container: Set<Liquide> = new Set();
@@ -27,11 +32,15 @@ const getLastLiqudeWithSameType = (bottle: Bottle) => {
   return container;
 };
 
-export const transfuse = (fromBottle?: Bottle, toBottle?: Bottle) => {
+export const transfuse = (
+  fromBottle?: Bottle,
+  toBottle?: Bottle,
+  ignoreSameType?: boolean
+) => {
   if (!fromBottle || !toBottle) return false;
   if (bottleIsEmpty(fromBottle)) return false;
   if (bottleIsFull(toBottle)) return false;
-  if (!isSameTopLiqide(fromBottle, toBottle)) return false;
+  if (!ignoreSameType && !isSameTopLiqide(fromBottle, toBottle)) return false;
 
   const bottle1 = { ...fromBottle };
   const bottle2 = { ...toBottle };
@@ -39,7 +48,14 @@ export const transfuse = (fromBottle?: Bottle, toBottle?: Bottle) => {
   const liquide = lastFrom(Array.from(fromBottle.liquids));
   if (!liquide) return false;
 
-  const liquids = Array.from(getLastLiqudeWithSameType(fromBottle));
+  let liquids: Liquide[] = [];
+
+  if (ignoreSameType) {
+    liquids = Array.from(getLastLiqude(fromBottle));
+  } else {
+    liquids = Array.from(getLastLiqudeWithSameType(fromBottle));
+  }
+
   const spaceLeft = bottleSize - toBottle.liquids.size;
 
   liquids.slice(0, spaceLeft).forEach((liquide) => {
