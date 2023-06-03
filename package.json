@@ -17,7 +17,6 @@
     "vite-plugin-solid": "2.7.0"
   },
   "dependencies": {
-    "@solid-primitives/keyboard": "1.2.3",
     "nanoid": "4.0.2",
     "solid-js": "1.7.6"
   }
