@@ -3,18 +3,13 @@ import {
   EMPTY_LIQUIDE,
   LIQUIDE_SEPARATOR,
   LIQUIDS_VARIANTS,
-  flipedLiquidsVariants,
+  FLIPED_LIQUIDS_VARIANTS,
 } from "../constants";
-import type { LiquideType } from "../types/liquide-type";
 
 export class Bottle {
-  liquids: LiquideType[] = [];
+  liquids: string[] = [];
 
-  constructor(options?: {
-    liquids?: LiquideType[];
-    fill?: LiquideType;
-    parse?: string;
-  }) {
+  constructor(options?: { liquids?: string[]; fill?: string; parse?: string }) {
     if (options?.liquids) this.liquids = options.liquids;
     if (options?.fill) this.fill(options.fill);
     if (options?.parse) this.parse(options.parse);
@@ -66,7 +61,7 @@ export class Bottle {
   }
 
   get topLiquids() {
-    let type: LiquideType | null = null;
+    let type: string | null = null;
     let count = 0;
 
     for (let index = this.liquids.length - 1; index >= 0; index--) {
@@ -90,15 +85,15 @@ export class Bottle {
       .map((liquid) => parseInt(liquid, 10))
       .filter((liquid) => liquid !== EMPTY_LIQUIDE)
       .map((liquid) => {
-        return flipedLiquidsVariants[liquid];
+        return FLIPED_LIQUIDS_VARIANTS[liquid];
       });
   }
 
-  fill(liquid: LiquideType) {
+  fill(liquid: string) {
     this.liquids = new Array(BOTTLE_SIZE).fill(liquid);
   }
 
-  addLiquid(liquid: LiquideType, count: number = 1) {
+  addLiquid(liquid: string, count: number = 1) {
     this.liquids = [...this.liquids, ...new Array(count).fill(liquid)];
   }
 

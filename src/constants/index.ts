@@ -1,6 +1,3 @@
-import type { LiquideType } from "../types/liquide-type";
-import { flipObject } from "../utils/flip-object";
-
 export const GITHUB_LINK = "https://github.com/sygeman/water-color-sort";
 
 export const BOTTLE_SIZE = 4;
@@ -13,22 +10,7 @@ export const LIQUIDE_SEPARATOR = "-";
 export const ALL_COUNT_VARIANTS = [5, 7, 9, 8, 11];
 export const EMPTY_COUNT_VARIANTS = [1, 2];
 
-export const LIQUIDS_VARIANTS = {
-  pink: 1,
-  red: 2,
-  indigo: 3,
-  white: 4,
-  green: 5,
-  greenDark: 6,
-  yellow: 7,
-  cyan: 8,
-  orange: 9,
-};
-
-export const flipedLiquidsVariants: { [key: number]: LiquideType } =
-  flipObject(LIQUIDS_VARIANTS);
-
-export const liquidsColors: { [key: string]: string } = {
+export const LIQUIDS_COLORS: { [key: string]: string } = {
   pink: "bg-pink-500",
   red: "bg-red-800",
   indigo: "bg-indigo-800",
@@ -39,3 +21,11 @@ export const liquidsColors: { [key: string]: string } = {
   orange: "bg-orange-600",
   cyan: "bg-cyan-500",
 };
+
+export let LIQUIDS_VARIANTS: { [key: string]: number } = {};
+export let FLIPED_LIQUIDS_VARIANTS: { [key: number]: string } = {};
+
+Object.keys(LIQUIDS_COLORS).forEach((key, index) => {
+  LIQUIDS_VARIANTS[key] = index + 1;
+  FLIPED_LIQUIDS_VARIANTS[index + 1] = key;
+});

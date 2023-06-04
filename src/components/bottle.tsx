@@ -1,5 +1,5 @@
 import { Component, For } from "solid-js";
-import { liquidsColors } from "../constants";
+import { LIQUIDS_COLORS } from "../constants";
 
 interface BottleProps {
   bottle: string[];
@@ -17,7 +17,7 @@ export const Bottle: Component<BottleProps> = (props) => (
     onClick={props.onClick}
   >
     <For each={props.bottle}>
-      {(liquide) => <div class={`h-8 w-6 ${liquidsColors[liquide]}`} />}
+      {(liquide) => <div class={`h-8 w-6 ${LIQUIDS_COLORS[liquide]}`} />}
     </For>
   </button>
 );

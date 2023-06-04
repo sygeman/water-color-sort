@@ -4,7 +4,6 @@ import {
   EMPTY_COUNT_VARIANTS,
   LIQUIDS_VARIANTS,
 } from "../constants";
-import type { LiquideType } from "../types/liquide-type";
 import { shuffle } from "../utils/shuffle";
 import { Bottle } from "./bottle";
 
@@ -18,7 +17,7 @@ export class WaterColorSort {
   }
 
   get liquids() {
-    const liquidsTypes = new Set<LiquideType>();
+    const liquidsTypes = new Set<string>();
 
     for (const bottle of this.bottles) {
       for (const liquid of bottle.liquids) {
@@ -111,7 +110,7 @@ export class WaterColorSort {
     const liquids = shuffle(Object.keys(LIQUIDS_VARIANTS)).slice(
       0,
       liquidsCount
-    ) as LiquideType[];
+    );
 
     this.bottles = [
       ...liquids.map((liquidType) => new Bottle({ fill: liquidType })),

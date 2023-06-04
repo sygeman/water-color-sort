@@ -2,10 +2,9 @@ import { Component, createSignal, For } from "solid-js";
 import { GITHUB_LINK } from "../constants";
 import { Bottle } from "./bottle";
 import { WaterColorSort } from "../libs/water-color-sort";
-import type { LiquideType } from "../types/liquide-type";
 
 export const Game: Component = () => {
-  const [bottles, setBottles] = createSignal<LiquideType[][]>([]);
+  const [bottles, setBottles] = createSignal<string[][]>([]);
   const [selected, setSelected] = createSignal<number | null>(null);
 
   const wcs = new WaterColorSort();
