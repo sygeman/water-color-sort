@@ -1,57 +1,38 @@
-import {
-  Component,
-  createEffect,
-  createMemo,
-  createSignal,
-  For,
-} from "solid-js";
-import { githubLink, liquids } from "../constants";
-import { bottleIsEmpty } from "../libs/bottle-is-empty";
-import { bottlesIsDone } from "../libs/bottles-is-done";
-import { generateBottles } from "../libs/generate-bottles";
-import { transfuse } from "../libs/transfuse";
-import { Bottle } from "../types/bottle";
+import { Component, createSignal, For } from "solid-js";
+import { GITHUB_LINK } from "../constants";
+import { BottleContainer } from "./bottle";
+import { WaterColorSort } from "../libs/water-color-sort";
+import { LiquideType } from "../types/liquide-type";
 
-const Game: Component = () => {
-  const [bottles, setBottles] = createSignal<Map<string, Bottle>>(new Map());
-  const [selected, setSelected] = createSignal<string | null>(null);
+export const Game: Component = () => {
+  const [bottles, setBottles] = createSignal<LiquideType[][]>([]);
+  const [selected, setSelected] = createSignal<number | null>(null);
 
-  const bottlesArray = createMemo(() => [...bottles().values()]);
+  const wcs = new WaterColorSort();
 
-  const newGame = () => {
-    const newBottles = generateBottles();
-    setBottles(newBottles);
-    setSelected(null);
-  };
-
-  createEffect(() => {
-    const allBottlesIsDone = bottlesIsDone(bottles());
-    if (allBottlesIsDone) {
-      newGame();
-    }
+  wcs.on("reset", () => setSelected(null));
+  wcs.on("newGame", () => setSelected(null));
+  wcs.on("update", () => {
+    if (wcs.gameDone) return wcs.newGame();
+    setBottles(wcs.bottles.map((bottle) => bottle.liquids));
   });
 
-  const select = (id: string) => {
-    const bottle = bottles().get(id);
-    if (!bottle || (bottleIsEmpty(bottle) && !selected())) return false;
+  wcs.newGame();
 
-    setSelected((prevId) => {
-      if (prevId === id) return null;
-      if (!prevId) return id;
+  const newGame = () => wcs.newGame();
+  const reset = () => wcs.reset();
 
-      const prevBottle = bottles().get(prevId);
-      const transfuseResult = transfuse(prevBottle, bottle);
+  const select = (bottleIndex: number) => {
+    const bottle = wcs.bottles[bottleIndex];
 
-      if (transfuseResult) {
-        const [bottle1, bottle2] = transfuseResult;
-        // Set bottles
-        setBottles((prevBottles) => {
-          const newBottles = new Map(prevBottles);
-          newBottles.set(bottle1.id, bottle1);
-          newBottles.set(bottle2.id, bottle2);
-          return newBottles;
-        });
-      }
+    if (!bottle || (bottle.empty && selected() === null)) return false;
+
+    setSelected((prevBottleIndex) => {
+      if (prevBottleIndex === bottleIndex) return null;
+      if (prevBottleIndex === null) return bottleIndex;
+
+      const prevBottle = wcs.bottles[prevBottleIndex];
+      wcs.transfuse(prevBottle, bottle);
 
       return null;
     });
@@ -62,7 +43,7 @@ const Game: Component = () => {
       <a
         class="absolute right-4 top-2 text-white/50 font-medium"
         target="blank"
-        href={githubLink}
+        href={GITHUB_LINK}
       >
         Github
       </a>
@@ -70,22 +51,16 @@ const Game: Component = () => {
         <div class="flex w-full justify-between text-white/50">
           <div>Water Color Sort</div>
           <button onClick={newGame}>New Game</button>
+          <button onClick={reset}>Reset</button>
         </div>
         <div class="w-80 h-80 bg-slate-800 flex flex-wrap justify-center items-center gap-6 px-4">
-          <For each={bottlesArray()}>
-            {(bottle) => (
-              <button
-                class={`flex flex-col-reverse w-6 h-32 bg-white/20 rounded overflow-hidden transition-transform ${
-                  bottle.id === selected() ? "scale-110" : ""
-                }`}
-                onClick={() => select(bottle.id)}
-              >
-                <For each={[...bottle.liquids.values()]}>
-                  {(liquide) => (
-                    <div class={`h-8 w-6 ${liquids[liquide.type]}`} />
-                  )}
-                </For>
-              </button>
+          <For each={bottles()}>
+            {(bottle, bottleIndex) => (
+              <BottleContainer
+                selected={bottleIndex() === selected()}
+                bottle={bottle}
+                onClick={() => select(bottleIndex())}
+              />
             )}
           </For>
         </div>
@@ -93,5 +68,3 @@ const Game: Component = () => {
     </div>
   );
 };
-
-export default Game;
