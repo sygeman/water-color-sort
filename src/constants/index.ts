@@ -28,7 +28,7 @@ export const LIQUIDS_VARIANTS = {
 export const flipedLiquidsVariants: { [key: number]: LiquideType } =
   flipObject(LIQUIDS_VARIANTS);
 
-export const liquidsColors = {
+export const liquidsColors: { [key: string]: string } = {
   pink: "bg-pink-500",
   red: "bg-red-800",
   indigo: "bg-indigo-800",

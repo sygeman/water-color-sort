@@ -1,8 +1,8 @@
 import { Component, createSignal, For } from "solid-js";
 import { GITHUB_LINK } from "../constants";
-import { BottleContainer } from "./bottle";
+import { Bottle } from "./bottle";
 import { WaterColorSort } from "../libs/water-color-sort";
-import { LiquideType } from "../types/liquide-type";
+import type { LiquideType } from "../types/liquide-type";
 
 export const Game: Component = () => {
   const [bottles, setBottles] = createSignal<LiquideType[][]>([]);
@@ -56,7 +56,7 @@ export const Game: Component = () => {
         <div class="w-80 h-80 bg-slate-800 flex flex-wrap justify-center items-center gap-6 px-4">
           <For each={bottles()}>
             {(bottle, bottleIndex) => (
-              <BottleContainer
+              <Bottle
                 selected={bottleIndex() === selected()}
                 bottle={bottle}
                 onClick={() => select(bottleIndex())}
